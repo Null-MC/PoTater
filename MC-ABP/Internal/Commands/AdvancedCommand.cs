@@ -6,12 +6,15 @@ namespace MC_ABP.Internal.Commands;
 internal class AdvancedCommand : Command
 {
     private readonly ILogger<AdvancedCommand> logger;
+    private readonly IAdvancedDefineGenerator generator;
 
 
     public AdvancedCommand(
-        ILogger<AdvancedCommand> logger)
+        ILogger<AdvancedCommand> logger,
+        IAdvancedDefineGenerator generator)
             : base("advanced", "Generates a blocks.glsl file defining block ID's using comments from block.properties.")
     {
+        this.generator = generator;
         this.logger = logger;
 
         var argJsonBlocksFile = new Argument<FileInfo>("json", "The blocks.json file to scan.");
@@ -26,8 +29,17 @@ internal class AdvancedCommand : Command
         this.SetHandler(RunAsync, argJsonBlocksFile, argPropertiesFile, argDefinesFile);
     }
 
-    private Task RunAsync(FileInfo jsonBlocksFile, FileInfo propertiesFile, FileInfo defineFile)
+    private async Task RunAsync(FileInfo jsonBlocksFile, FileInfo propertiesFile, FileInfo defineFile)
     {
-        throw new NotImplementedException("Advanced generation has not been implemented yet!");
+        logger.LogDebug("Generating advanced block-defines from file [{FullName}]...", jsonBlocksFile.FullName);
+
+        try {
+            await generator.GenerateAsync(jsonBlocksFile.FullName, propertiesFile.FullName, defineFile.FullName);
+
+            logger.LogDebug("Successfully generated advanced block-defines for file [{FullName}]...", jsonBlocksFile.FullName);
+        }
+        catch (Exception error) {
+            logger.LogError(error, "Failed to generate advanced block-defines for file [{FullName}]!", jsonBlocksFile.FullName);
+        }
     }
 }
