@@ -7,7 +7,7 @@ namespace MC_ABP.Internal;
 
 internal interface ISimpleDefineGenerator
 {
-    Task GenerateAsync(string blockPropertiesFile, string blockDefineFile, CancellationToken token = default);
+    Task GenerateAsync(string blockPropertiesFile, string blockDefineFile, string? blockPropertiesTemplateFile = null, CancellationToken token = default);
 }
 
 internal class SimpleDefineGenerator : ISimpleDefineGenerator
@@ -23,36 +23,57 @@ internal class SimpleDefineGenerator : ISimpleDefineGenerator
         this.logger = logger;
     }
 
-    public async Task GenerateAsync(string blockPropertiesFile, string blockDefineFile, CancellationToken token = default)
+    public async Task GenerateAsync(string blockPropertiesFile, string blockDefineFile, string? blockPropertiesTemplateFile = null, CancellationToken token = default)
     {
-        await using var inputStream = File.Open(blockPropertiesFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var inputFile = blockPropertiesTemplateFile ?? blockPropertiesFile;
+        await using var inputStream = File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read);
         using var reader = new StreamReader(inputStream);
 
-        await using var outputStream = File.Open(blockDefineFile, FileMode.Create, FileAccess.Write, FileShare.None);
-        await using var writer = new StreamWriter(outputStream);
+        await using var defineOutputStream = File.Open(blockDefineFile, FileMode.Create, FileAccess.Write, FileShare.None);
+        await using var defineWriter = new StreamWriter(defineOutputStream);
 
-        int? lastKnownIndex = null;
-        await foreach (var (blockId, blockName) in ProcessAsync(reader, token)) {
-            int blockIdFinal;
-
-            if (blockId == "*") {
-                lastKnownIndex = (lastKnownIndex ?? 0) + 1;
-                blockIdFinal = lastKnownIndex.Value;
+        Stream? blockOutputStream = null;
+        StreamWriter? blockWriter = null;
+        try {
+            if (blockPropertiesTemplateFile != null) {
+                blockOutputStream = File.Open(blockPropertiesFile, FileMode.Create, FileAccess.Write, FileShare.None);
+                blockWriter = new StreamWriter(blockOutputStream);
             }
-            else {
-                if (int.TryParse(blockId, out var blockIdValue)) {
-                    lastKnownIndex = blockIdValue;
-                    blockIdFinal = blockIdValue;
+
+            int? lastKnownIndex = null;
+            await foreach (var (blockId, blockName, blockMatches) in ProcessAsync(reader, token)) {
+                int blockIdFinal;
+
+                if (blockId == "*") {
+                    lastKnownIndex = (lastKnownIndex ?? 0) + 1;
+                    blockIdFinal = lastKnownIndex.Value;
                 }
-                else throw new ApplicationException($"Failed to parse block ID '{blockId}'!");
-            }
+                else {
+                    if (int.TryParse(blockId, out var blockIdValue)) {
+                        lastKnownIndex = blockIdValue;
+                        blockIdFinal = blockIdValue;
+                    }
+                    else throw new ApplicationException($"Failed to parse block ID '{blockId}'!");
+                }
 
-            await writer.WriteLineAsync($"#define {blockName} {blockIdFinal}");
-            logger.LogDebug("Added {blockName}={blockIdFinal}", blockName, blockIdFinal);
+                await defineWriter.WriteLineAsync($"#define {blockName} {blockIdFinal}");
+                logger.LogDebug("Added {blockName}={blockIdFinal}", blockName, blockIdFinal);
+
+                if (blockWriter != null) {
+                    await blockWriter.WriteLineAsync($"block.{blockIdFinal}={blockMatches}");
+                }
+            }
+        }
+        finally {
+            if (blockWriter != null)
+                await blockWriter.DisposeAsync();
+
+            if (blockOutputStream != null)
+                await blockOutputStream.DisposeAsync();
         }
     }
 
-    private async IAsyncEnumerable<(string id, string name)> ProcessAsync(TextReader reader, [EnumeratorCancellation] CancellationToken token)
+    private async IAsyncEnumerable<(string id, string name, string blockMatches)> ProcessAsync(TextReader reader, [EnumeratorCancellation] CancellationToken token)
     {
         string? lastComment = null;
         var lineBuilder = new StringBuilder();
@@ -87,7 +108,10 @@ internal class SimpleDefineGenerator : ISimpleDefineGenerator
             var blockId = blockMatch.Groups[1].Value;
 
             if (lastComment != null) {
-                yield return (blockId, lastComment);
+                var blockMatchPos = lineFinal.IndexOf('=');
+                var blockMatches = lineFinal[(blockMatchPos+1)..].Trim();
+
+                yield return (blockId, lastComment, blockMatches);
                 lastComment = null;
             }
             else {
