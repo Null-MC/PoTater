@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MC_ABP.Internal;
@@ -54,17 +55,30 @@ internal class SimpleDefineGenerator : ISimpleDefineGenerator
     private async IAsyncEnumerable<(string id, string name)> ProcessAsync(TextReader reader, [EnumeratorCancellation] CancellationToken token)
     {
         string? lastComment = null;
+        var lineBuilder = new StringBuilder();
 
         while (await reader.ReadLineAsync() is {} line) {
             token.ThrowIfCancellationRequested();
 
-            var commentMatch = expComment.Match(line);
+            if (lineBuilder.Length > 0) lineBuilder.Append(' ');
+
+            var lineTrimmed = line.Trim();
+            if (lineTrimmed.EndsWith('\\')) {
+                lineBuilder.Append(lineTrimmed[..^1].TrimEnd());
+                continue;
+            }
+
+            lineBuilder.Append(lineTrimmed.TrimEnd());
+            var lineFinal = lineBuilder.ToString();
+            lineBuilder.Clear();
+
+            var commentMatch = expComment.Match(lineFinal);
             if (commentMatch.Success) {
                 lastComment = commentMatch.Groups[1].Value.Trim();
                 continue;
             }
 
-            var blockMatch = expBlock.Match(line);
+            var blockMatch = expBlock.Match(lineFinal);
             if (!blockMatch.Success) {
                 lastComment = null;
                 continue;
