@@ -12,7 +12,7 @@ internal interface ISimpleDefineGenerator
 internal class SimpleDefineGenerator : ISimpleDefineGenerator
 {
     private static readonly Regex expComment = new(@"^#+\s*(\w+)\s*$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-    private static readonly Regex expBlock = new(@"^block\.(\d+)\s*=\s*", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+    private static readonly Regex expBlock = new(@"^block\.([\d\*]+)\s*=\s*", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
     private readonly ILogger<SimpleDefineGenerator> logger;
 
@@ -30,9 +30,24 @@ internal class SimpleDefineGenerator : ISimpleDefineGenerator
         await using var outputStream = File.Open(blockDefineFile, FileMode.Create, FileAccess.Write, FileShare.None);
         await using var writer = new StreamWriter(outputStream);
 
+        int? lastKnownIndex = null;
         await foreach (var (blockId, blockName) in ProcessAsync(reader, token)) {
-            await writer.WriteLineAsync($"#define {blockName} {blockId}");
-            logger.LogDebug("Added {blockName}={blockId}", blockName, blockId);
+            int blockIdFinal;
+
+            if (blockId == "*") {
+                lastKnownIndex = (lastKnownIndex ?? 0) + 1;
+                blockIdFinal = lastKnownIndex.Value;
+            }
+            else {
+                if (int.TryParse(blockId, out var blockIdValue)) {
+                    lastKnownIndex = blockIdValue;
+                    blockIdFinal = blockIdValue;
+                }
+                else throw new ApplicationException($"Failed to parse block ID '{blockId}'!");
+            }
+
+            await writer.WriteLineAsync($"#define {blockName} {blockIdFinal}");
+            logger.LogDebug("Added {blockName}={blockIdFinal}", blockName, blockIdFinal);
         }
     }
 
