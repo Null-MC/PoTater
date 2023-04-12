@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace MC_ABP.Internal.Parsers;
+namespace NullMC.APM.Internal.Parsers;
 
 internal interface IPropertiesParser
 {
@@ -38,8 +38,7 @@ internal abstract class PropertiesParserBase : IPropertiesParser
             if (lineBuilder.Length > 0) lineBuilder.Append(' ');
 
             var lineTrimmed = line.Trim();
-            if (lineTrimmed.EndsWith('\\'))
-            {
+            if (lineTrimmed.EndsWith('\\')) {
                 lineBuilder.Append(lineTrimmed[..^1].TrimEnd());
                 continue;
             }
@@ -49,31 +48,27 @@ internal abstract class PropertiesParserBase : IPropertiesParser
             lineBuilder.Clear();
 
             var commentMatch = expComment.Match(lineFinal);
-            if (commentMatch.Success)
-            {
+            if (commentMatch.Success) {
                 lastComment = commentMatch.Groups[1].Value.Trim();
                 continue;
             }
 
             var lineMatch = LineMatchExp.Match(lineFinal);
-            if (!lineMatch.Success)
-            {
+            if (!lineMatch.Success) {
                 lastComment = null;
                 continue;
             }
 
             var itemId = lineMatch.Groups[1].Value;
 
-            if (lastComment != null)
-            {
+            if (lastComment != null) {
                 var matchPos = lineFinal.IndexOf('=');
                 var itemValue = lineFinal[(matchPos + 1)..].Trim();
 
                 yield return (itemId, lastComment, itemValue);
                 lastComment = null;
             }
-            else
-            {
+            else {
                 logger.LogWarning("No name comment found for line {blockId}.", itemId);
             }
         }

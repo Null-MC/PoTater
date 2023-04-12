@@ -1,0 +1,14 @@
+name: Build-Test
+on: [push, pull_request]
+
+jobs:
+  build_test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    #if: github.event.inputs.version == ''
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: dotnet build MC-APM.Tests -c Test
+      - name: Test
+        run: dotnet test MC-APM.Tests -c Test

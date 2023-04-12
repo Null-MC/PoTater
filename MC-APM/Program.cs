@@ -1,13 +1,13 @@
-﻿using MC_ABP.Internal;
-using MC_ABP.Internal.Commands;
-using MC_ABP.Internal.Parsers;
-using MC_ABP.Internal.Processors;
+﻿using System.CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NullMC.APM.Internal;
+using NullMC.APM.Internal.Commands;
+using NullMC.APM.Internal.Parsers;
+using NullMC.APM.Internal.Processors;
 using Serilog;
-using System.CommandLine;
 
-namespace MC_ABP;
+namespace NullMC.APM;
 
 internal static class Program
 {

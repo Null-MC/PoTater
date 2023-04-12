@@ -1,4 +1,4 @@
-﻿namespace MC_ABP.Internal
+﻿namespace NullMC.APM.Internal
 {
     internal class AdvancedBlockData
     {

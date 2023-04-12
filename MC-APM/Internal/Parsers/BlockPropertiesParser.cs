@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
-namespace MC_ABP.Internal.Parsers;
+namespace NullMC.APM.Internal.Parsers;
 
 internal class BlockPropertiesParser : PropertiesParserBase
 {

@@ -1,7 +1,7 @@
-﻿using MC_ABP.Internal.Parsers;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using NullMC.APM.Internal.Parsers;
 
-namespace MC_ABP.Internal.Processors;
+namespace NullMC.APM.Internal.Processors;
 
 internal class EntityPropertiesProcessor : PropertiesProcessorBase
 {

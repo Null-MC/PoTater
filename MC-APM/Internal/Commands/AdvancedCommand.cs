@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System.CommandLine;
+﻿using System.CommandLine;
+using Microsoft.Extensions.Logging;
 
-namespace MC_ABP.Internal.Commands;
+namespace NullMC.APM.Internal.Commands;
 
 internal class AdvancedCommand : Command
 {

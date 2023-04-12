@@ -1,17 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>MC_ABP</RootNamespace>
+    <RootNamespace>NullMC.APM</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <SignAssembly>False</SignAssembly>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>Minecraft-AutoBlockProperties</PackageId>
-    <Title>Minecraft Auto Block.Properties</Title>
     <Authors>Null511</Authors>
-    <PackAsTool>True</PackAsTool>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-namespace MC_ABP.Internal.Commands;
+namespace NullMC.APM.Internal.Commands;
 
 internal class AppRootCommand : RootCommand
 {

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Nodes;
 
-namespace MC_ABP.Internal;
+namespace NullMC.APM.Internal;
 
 internal interface IAdvancedDefineGenerator
 {
