@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MC-ABP", "MC-ABP\MC-ABP.csproj", "{35CE6694-0C88-4076-A386-812B9EA6A315}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MC-APM", "MC-APM\MC-APM.csproj", "{35CE6694-0C88-4076-A386-812B9EA6A315}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
