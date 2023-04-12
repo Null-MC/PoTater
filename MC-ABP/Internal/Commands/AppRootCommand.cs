@@ -8,11 +8,13 @@ internal class AppRootCommand : RootCommand
 
 
     public AppRootCommand(
-        SimpleCommand cmdSimple,
-        AdvancedCommand cmdAdvanced)
+        BlockCommand cmdBlock,
+        ItemCommand cmdItem,
+        EntityCommand cmdEntity)
     {
-        Add(cmdSimple);
-        Add(cmdAdvanced);
+        Add(cmdBlock);
+        Add(cmdItem);
+        Add(cmdEntity);
 
         Add(VerboseOption = new Option<bool>(new[] {"--verbose", "-v"}, () => false, "Show the deets."));
     }

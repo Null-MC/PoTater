@@ -1,5 +1,7 @@
 ﻿using MC_ABP.Internal;
 using MC_ABP.Internal.Commands;
+using MC_ABP.Internal.Parsers;
+using MC_ABP.Internal.Processors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -43,10 +45,19 @@ internal static class Program
 
         services.AddSingleton(configuration);
         services.AddSingleton<AppRootCommand>();
-        services.AddSingleton<SimpleCommand>();
+        services.AddSingleton<BlockCommand>();
+        services.AddSingleton<ItemCommand>();
+        services.AddSingleton<EntityCommand>();
         services.AddSingleton<AdvancedCommand>();
 
-        services.AddTransient<ISimpleDefineGenerator, SimpleDefineGenerator>();
+        services.AddTransient<BlockPropertiesParser>();
+        services.AddTransient<ItemPropertiesParser>();
+        services.AddTransient<EntityPropertiesParser>();
+
+        services.AddTransient<BlockPropertiesProcessor>();
+        services.AddTransient<ItemPropertiesProcessor>();
+        services.AddTransient<EntityPropertiesProcessor>();
+
         services.AddTransient<IAdvancedDefineGenerator, AdvancedDefineGenerator>();
     }
 }

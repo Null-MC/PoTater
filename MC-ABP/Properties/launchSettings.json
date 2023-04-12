@@ -3,19 +3,24 @@
     "MC-ABP": {
       "commandName": "Project"
     },
-    "simple-test": {
-      "commandName": "Project",
-      "commandLineArgs": "simple \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"",
-      "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
-    },
-    "simple-template-test": {
-      "commandName": "Project",
-      "commandLineArgs": "simple \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"  -t \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.template.properties\"",
-      "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
-    },
     "advanced-test": {
       "commandName": "Project",
       "commandLineArgs": "advanced \"D:\\MC-Shader\\Shrimple\\src\\shaders\\blocks.json\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"",
+      "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
+    },
+    "block-test": {
+      "commandName": "Project",
+      "commandLineArgs": "block \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"",
+      "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
+    },
+    "block-template-test": {
+      "commandName": "Project",
+      "commandLineArgs": "block \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"  -t \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.template.properties\"",
+      "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
+    },
+    "entity-test": {
+      "commandName": "Project",
+      "commandLineArgs": "entity \"D:\\MC-Shader\\Shrimple\\src\\shaders\\entity.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\entities.glsl\"",
       "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
     }
   }
