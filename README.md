@@ -58,5 +58,23 @@ and the same blocks.glsl file as before:
 #define BLOCK_MAGMA 102
 ```
 
+## Property Groups
+Lists of objects can be reused via property groups.
+```properties
+group.candles=candle black_candle blue_candle brown_candle cyan_candle gray_candle green_candle light_blue_candle light_gray_candle lime_candle magenta_candle orange_candle pink_candle purple_candle red_candle white_candle yellow_candle
+
+# BLOCK_CANDLES_1
+block.*=[candles]:candles=1:lit=false
+
+# BLOCK_CANDLES_2
+block.*=[candles]:candles=2:lit=false
+
+# BLOCK_CANDLES_3
+block.*=[candles]:candles=3:lit=false
+
+# BLOCK_CANDLES_4
+block.*=[candles]:candles=4:lit=false
+```
+
 ## Advanced Usage
 This feature is still an early work-in-progress and not yet usable.
