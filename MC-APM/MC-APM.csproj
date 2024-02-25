@@ -9,6 +9,9 @@
     <SignAssembly>False</SignAssembly>
     <Authors>Null511</Authors>
     <IsPackable>false</IsPackable>
+    <AssemblyVersion>0.2</AssemblyVersion>
+    <FileVersion>0.2</FileVersion>
+    <Version>0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
