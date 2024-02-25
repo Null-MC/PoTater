@@ -9,15 +9,12 @@ namespace NullMC.APM.Tests.Internal;
 public abstract class TestBase : IDisposable
 {
     private readonly ServiceProvider provider;
-    //private readonly ITestOutputHelper outputHelper;
 
     protected IServiceProvider Provider => provider;
 
 
     protected TestBase(ITestOutputHelper outputHelper)
     {
-        //this.outputHelper = outputHelper;
-
         var services = new ServiceCollection();
 
         services.AddSingleton(outputHelper);
@@ -36,6 +33,12 @@ public abstract class TestBase : IDisposable
     }
 
     public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
     {
         provider.Dispose();
     }

@@ -18,11 +18,11 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
     private static readonly Regex expComment = RegexComment();
     private static readonly char[] whitespaceChars = [' ', '\t'];
 
-    private readonly Dictionary<string, string[]> _groups = new(StringComparer.InvariantCultureIgnoreCase);
+    private readonly Dictionary<string, string[]> groupList = new(StringComparer.InvariantCultureIgnoreCase);
 
     protected Regex? LineMatchExp {get; set;}
 
-    public IReadOnlyDictionary<string, string[]> Groups => _groups;
+    public IReadOnlyDictionary<string, string[]> Groups => groupList;
 
 
     public async IAsyncEnumerable<ParsedLine> ParseAsync(TextReader reader, [EnumeratorCancellation] CancellationToken token = default)
@@ -53,7 +53,7 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
                 var matchPos = lineFinal.IndexOf('=');
                 var groupName = groupMatch.Groups[1].Value.Trim();
 
-                _groups[groupName] = lineFinal[(matchPos + 1)..]
+                groupList[groupName] = lineFinal[(matchPos + 1)..]
                     .Split(whitespaceChars, StringSplitOptions.RemoveEmptyEntries);
 
                 lastComment = null;

@@ -19,12 +19,9 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
             .Distinct().ToArray();
 
         var propertiesBuilder = new StringBuilder();
-        //var definesBuilder = new StringBuilder();
 
         var allMetadata = new Dictionary<string, object?[]>(StringComparer.InvariantCultureIgnoreCase);
         foreach (var key in allMetadataKeys) allMetadata[key] = new object[blockData.Length];
-
-        //await using var blockPropertiesStream = File.Open(blockPropertiesFile, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
         await using var blockDefinesStream = File.Open(blockDefinesFile, FileMode.Create, FileAccess.Write);
         await using var blockDefinesWriter = new StreamWriter(blockDefinesStream);
@@ -36,7 +33,6 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
             if (item.Matches != null)
                 propertiesBuilder.AppendLine($"block.{item.Id}={string.Join(' ', item.Matches)}");
 
-            //definesBuilder.AppendLine($"#define {item.Name} {item.Id}");
             await blockDefinesWriter.WriteLineAsync($"#define {item.Name} {item.Id}");
 
             foreach (var key in allMetadataKeys)
@@ -72,7 +68,7 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
         var blockPropertiesText = propertiesBuilder.ToString();
     }
 
-    public IEnumerable<AdvancedBlockData> ParseBlockJsonData(string blocksJsonFile)
+    public static IEnumerable<AdvancedBlockData> ParseBlockJsonData(string blocksJsonFile)
     {
         using var blocksJsonStream = File.Open(blocksJsonFile, FileMode.Open, FileAccess.Read);
 
