@@ -1,15 +1,15 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace NullMC.APM.Internal.Parsers;
 
-internal class ItemPropertiesParser : PropertiesParserBase
+internal partial class ItemPropertiesParser : PropertiesParserBase
 {
-    private static readonly Regex expItem = new(@"^item\.([\d\*]+)\s*=\s*", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-
-
     public ItemPropertiesParser(ILogger<ItemPropertiesParser> logger) : base(logger)
     {
-        LineMatchExp = expItem;
+        LineMatchExp = ItemLineRegex();
     }
+
+    [GeneratedRegex(@"^item\.([\d\*]+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    private static partial Regex ItemLineRegex();
 }

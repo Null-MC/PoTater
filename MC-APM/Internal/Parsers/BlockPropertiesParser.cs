@@ -1,15 +1,15 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace NullMC.APM.Internal.Parsers;
 
-internal class BlockPropertiesParser : PropertiesParserBase
+internal partial class BlockPropertiesParser : PropertiesParserBase
 {
-    private static readonly Regex expBlock = new(@"^block\.([\d\*]+)\s*=\s*", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-
-
     public BlockPropertiesParser(ILogger<BlockPropertiesParser> logger) : base(logger)
     {
-        LineMatchExp = expBlock;
+        LineMatchExp = BlockLineRegex();
     }
+
+    [GeneratedRegex(@"^block\.([\d\*]+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    private static partial Regex BlockLineRegex();
 }

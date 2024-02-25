@@ -4,7 +4,9 @@ namespace NullMC.APM.Internal.Commands;
 
 internal class AppRootCommand : RootCommand
 {
-    public Option<bool> VerboseOption {get;}
+    public static Option<bool> DebugOption {get;} = new(["--debug", "-d"], () => false, "Enable debug logging.");
+
+    public static AppRootCommand Instance {get;} = new(BlockCommand.Instance, ItemCommand.Instance, EntityCommand.Instance);
 
 
     public AppRootCommand(
@@ -16,6 +18,6 @@ internal class AppRootCommand : RootCommand
         Add(cmdItem);
         Add(cmdEntity);
 
-        Add(VerboseOption = new Option<bool>(new[] {"--verbose", "-v"}, () => false, "Show the deets."));
+        AddGlobalOption(DebugOption);
     }
 }

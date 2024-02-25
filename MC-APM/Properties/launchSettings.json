@@ -15,7 +15,7 @@
     },
     "block-template-test": {
       "commandName": "Project",
-      "commandLineArgs": "block \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"  -t \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.template.properties\"",
+      "commandLineArgs": "block \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.properties\" \"D:\\MC-Shader\\Shrimple\\src\\shaders\\lib\\blocks.glsl\"  -t \"D:\\MC-Shader\\Shrimple\\src\\shaders\\block.template.properties\" -d",
       "workingDirectory": "D:\\MC-Shader\\Shrimple\\src"
     },
     "entity-test": {

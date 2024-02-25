@@ -1,11 +1,12 @@
-﻿using System.CommandLine;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NullMC.APM.Internal;
 using NullMC.APM.Internal.Commands;
 using NullMC.APM.Internal.Parsers;
 using NullMC.APM.Internal.Processors;
 using Serilog;
+using Serilog.Events;
+using System.CommandLine;
 
 namespace NullMC.APM;
 
@@ -13,8 +14,18 @@ internal static class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        var enableDebug = false;
+        try {
+            enableDebug = AppRootCommand.Instance.Parse(args)
+                .FindResultFor(AppRootCommand.DebugOption)?
+                .GetValueOrDefault<bool?>() ?? false;
+        }
+        catch {
+            // ignore pre-parsing failures
+        }
+
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Is(enableDebug ? LogEventLevel.Debug : LogEventLevel.Information)
             .WriteTo.Console()
             .CreateLogger();
 
@@ -33,7 +44,7 @@ internal static class Program
             return 1;
         }
         finally {
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 

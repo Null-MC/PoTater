@@ -45,7 +45,7 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
             index++;
         }
 
-        if (allMetadataKeys.Any()) {
+        if (allMetadataKeys.Length > 0) {
             await blockDefinesWriter.WriteLineAsync();
 
             foreach (var key in allMetadataKeys) {
@@ -76,13 +76,13 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
     {
         using var blocksJsonStream = File.Open(blocksJsonFile, FileMode.Open, FileAccess.Read);
 
-        var jsonData = JsonNode.Parse(blocksJsonStream)?.AsObject();
-        if (jsonData == null) throw new ApplicationException("No data found!");
+        var jsonData = JsonNode.Parse(blocksJsonStream)?.AsObject()
+            ?? throw new ApplicationException("No data found!");
 
         var index = jsonData["__start"]?.GetValue<int>() ?? 1;
 
         foreach (var itemData in jsonData) {
-            if (itemData.Key.StartsWith("_")) continue;
+            if (itemData.Key.StartsWith('_')) continue;
 
             var itemObj = itemData.Value?.AsObject();
             if (itemObj == null) continue;
@@ -93,7 +93,7 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
             };
 
             if (itemObj["__match"] is JsonArray matchArray) {
-                item.Matches = matchArray.Select(n => n.GetValue<string>()).ToArray();
+                item.Matches = matchArray.Select(n => n?.GetValue<string>() ?? string.Empty).ToArray();
             }
             else {
                 var matchStr = itemObj["__match"]?.GetValue<string>();
@@ -103,7 +103,7 @@ internal class AdvancedDefineGenerator : IAdvancedDefineGenerator
             }
 
             foreach (var itemProp in itemObj) {
-                if (itemProp.Key.StartsWith("_") || itemProp.Value == null) continue;
+                if (itemProp.Key.StartsWith('_') || itemProp.Value == null) continue;
 
                 item.Metadata ??= new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
                 item.Metadata[itemProp.Key] = itemProp.Value;

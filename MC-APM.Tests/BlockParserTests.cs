@@ -6,10 +6,8 @@ using Xunit.Abstractions;
 
 namespace NullMC.APM.Tests;
 
-public class BlockParserTests : TestBase
+public class BlockParserTests(ITestOutputHelper outputHelper) : TestBase(outputHelper)
 {
-    public BlockParserTests(ITestOutputHelper outputHelper) : base(outputHelper) {}
-
     [Fact]
     public async Task CanParseBlockProperties()
     {
@@ -22,8 +20,8 @@ public class BlockParserTests : TestBase
         var parseResults = await parser.ParseAsync(reader).ToArrayAsync();
 
         var result = Assert.Single(parseResults);
-        Assert.Equal("8", result.id);
-        Assert.Equal("BLOCK_TORCH", result.name);
-        Assert.Equal("torch", result.blockMatches);
+        Assert.Equal("8", result.Id);
+        Assert.Equal("BLOCK_TORCH", result.Name);
+        Assert.Equal("torch", result.BlockMatches);
     }
 }
