@@ -1,8 +1,8 @@
-# APM [Automated Property Manager]
-A small command-line application for automatically generating, and optionally numbering, block/item/entity properties files for Minecraft Java shaders.
+# PoTatEr [**P**r**o**perty **T**empl**at**e Manag**er**]
+A small command-line application for generating block/item/entity properties files from simplified templates. Includes support for automatic numbering, and matching named/numbered define script. For Minecraft Java shaders using the Optifine/Iris pipeline only.
 
 ## Automatic Defines
-The most basic advantage to using APM is to have numbered defines automatically generated for you. This makes refering the blocks in code simpler, since you can reference them by name instead of hard-coded numbers. Using an example block.properties file:
+The most basic advantage is to have numbered defines automatically generated for you. This makes refering the blocks in code simpler, since you can reference them by name instead of hard-coded numbers. Using an example block.properties file:
 ```properties
 #= BLOCK_TORCH
 block.100=torch lantern
@@ -16,7 +16,7 @@ block.102=magma_block
 
 and running the following command:
 ```sh
-APM block
+potater block
 ```
 
 A blocks.glsl file will be generated containing the following defines:
@@ -27,7 +27,7 @@ A blocks.glsl file will be generated containing the following defines:
 ```
 
 ## Automatic Numbering
-A slightly more advanced use-case is to use APM to also automatically number blocks. This makes managing ID's much simpler, as adding/removing items no longer requires updating indices. Using an example block.template.properties file:
+A slightly more advanced use-case is to also automatically number blocks. This makes managing ID's much simpler, as adding/removing items no longer requires updating indices. Using an example block.template.properties file:
 ```properties
 #= BLOCK_TORCH
 block.200=torch lantern
@@ -41,7 +41,7 @@ block.*=magma_block
 
 Running the following command will genrate two files. A final block.properties file for Optifine/Iris, as well as the blocks.glsl file from the prior example. Example command:
 ```sh
-MC-APM block -t 'block.template.properties'
+potater block -t 'block.template.properties'
 ```
 
 The generated block.properties file:
