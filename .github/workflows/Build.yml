@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: dotnet build MC-APM.Tests -c Test
+        run: dotnet build Potater.Tests -c Test
       - name: Test
-        run: dotnet test MC-APM.Tests -c Test
+        run: dotnet test Potater.Tests -c Test
