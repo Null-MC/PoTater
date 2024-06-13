@@ -1,5 +1,5 @@
 # PoTatEr
-> **P**r**o**perty **T**empl**at**e Manag**er**
+**P**r**o**perty **T**empl**at**e Manag**er**  
 A small command-line application for generating block/item/entity properties files from simplified templates. Includes support for automatic numbering, and matching named/numbered define script. For Minecraft Java shaders using the Optifine/Iris pipeline only.
 
 ## Automatic Defines
