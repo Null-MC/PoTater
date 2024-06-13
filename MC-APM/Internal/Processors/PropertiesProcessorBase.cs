@@ -95,12 +95,19 @@ internal abstract class PropertiesProcessorBase(
                 else throw new ApplicationException($"Failed to parse ID '{lineData.Id}'!");
             }
 
-            await defineWriter.WriteLineAsync($"#define {lineData.Name} {lineIdFinal}");
-
             if (propertiesWriter != null)
-                await AppendPropertyLineAsync(propertiesWriter, lineIdFinal, lineData.BlockMatches);
+                await AppendPropertyLineAsync(propertiesWriter, lineIdFinal, lineData.Matches);
 
-            logger.LogDebug("Added {Name}={itemIdFinal}", lineData.Name, lineIdFinal);
+            if (lineData.DefineNames != null) {
+                foreach (var name in lineData.DefineNames) {
+                    await defineWriter.WriteLineAsync($"#define {name} {lineIdFinal}");
+
+                    logger.LogDebug("Defined {name}={lineIdFinal}", name, lineIdFinal);
+                }
+            }
+            else {
+                logger.LogWarning("No names found for entry!");
+            }
         }
     }
 

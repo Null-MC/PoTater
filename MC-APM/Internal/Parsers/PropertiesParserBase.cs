@@ -17,6 +17,7 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
     private static readonly Regex expGroup = RegexGroup();
     private static readonly Regex expComment = RegexComment();
     private static readonly char[] whitespaceChars = [' ', '\t'];
+    private static readonly char[] nameSplitChars = [' ', '\t', ',', ';', '|'];
 
     private readonly Dictionary<string, string[]> groupList = new(StringComparer.InvariantCultureIgnoreCase);
 
@@ -36,24 +37,23 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
         while (await reader.ReadLineAsync(token) is { } line) {
             token.ThrowIfCancellationRequested();
 
-            if (lineBuilder.Length > 0) lineBuilder.Append(' ');
+            //if (lineBuilder.Length > 0) lineBuilder.Append(' ');
 
-            var lineTrimmed = line.Trim();
-            if (lineTrimmed.EndsWith('\\')) {
-                lineBuilder.Append(lineTrimmed[..^1].TrimEnd());
+            if (line.TrimEnd().EndsWith('\\')) {
+                lineBuilder.AppendLine(line.TrimEnd());
                 continue;
             }
 
-            lineBuilder.Append(lineTrimmed.TrimEnd());
+            lineBuilder.Append(line.TrimEnd());
             var lineFinal = lineBuilder.ToString();
             lineBuilder.Clear();
 
             var groupMatch = expGroup.Match(lineFinal);
             if (groupMatch.Success) {
-                var matchPos = lineFinal.IndexOf('=');
+                var groupMatchPos = lineFinal.IndexOf('=');
                 var groupName = groupMatch.Groups[1].Value.Trim();
 
-                groupList[groupName] = lineFinal[(matchPos + 1)..]
+                groupList[groupName] = lineFinal[(groupMatchPos + 1)..]
                     .Split(whitespaceChars, StringSplitOptions.RemoveEmptyEntries);
 
                 lastComment = null;
@@ -77,22 +77,28 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
                 continue;
             }
 
-            var itemId = lineMatch.Groups[1].Value;
+            var entryId = lineMatch.Groups[1].Value;
+
+            var lineMatchPos = lineFinal.IndexOf('=');
+            var itemValue = lineFinal[(lineMatchPos + 1)..].Trim();
 
             if (lastComment != null) {
-                var matchPos = lineFinal.IndexOf('=');
-                var itemValue = lineFinal[(matchPos + 1)..].Trim();
-
                 yield return new ParsedLine {
-                    Id = itemId,
-                    Name = lastComment,
-                    BlockMatches = itemValue,
+                    Id = entryId,
+                    DefineNames = lastComment.Split(nameSplitChars, StringSplitOptions.RemoveEmptyEntries),
+                    Matches = itemValue,
                 };
 
                 lastComment = null;
             }
             else {
-                logger.LogWarning("No name comment found for line {blockId}.", itemId);
+                logger.LogWarning("No name comment found for line {entryId}.", entryId);
+
+                yield return new ParsedLine {
+                    Id = entryId,
+                    //Names = lastComment.Split(nameSplitChars, StringSplitOptions.RemoveEmptyEntries),
+                    Matches = itemValue,
+                };
             }
         }
     }
@@ -106,9 +112,9 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
             || line.StartsWith("#include");
     }
 
-    [GeneratedRegex(@"^#+\s*(\w+)\s*$", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    [GeneratedRegex(@"^\s*#=+\s*(.+)$", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
     private static partial Regex RegexComment();
 
-    [GeneratedRegex(@"^group\.(\w+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    [GeneratedRegex(@"^\s*group\.(\w+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
     private static partial Regex RegexGroup();
 }

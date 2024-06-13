@@ -22,13 +22,13 @@ public class ProcessingTests : TestBase
     public async Task CanAutoNumberProperties()
     {
         var blockPropertiesTemplate = new StringBuilder()
-            .AppendLine("#BLOCK_TORCH")
+            .AppendLine("#=BLOCK_TORCH")
             .AppendLine("block.8=torch")
-            .AppendLine("#BLOCK_LANTERN")
+            .AppendLine("#=BLOCK_LANTERN")
             .AppendLine("block.*=lantern")
-            .AppendLine("#BLOCK_FIRE")
+            .AppendLine("#=BLOCK_FIRE")
             .AppendLine("block.20=fire")
-            .AppendLine("#BLOCK_SOUL_FIRE")
+            .AppendLine("#=BLOCK_SOUL_FIRE")
             .AppendLine("block.*=soul_fire");
 
         await using var defineWriter = new StringWriter();
@@ -48,11 +48,11 @@ public class ProcessingTests : TestBase
     {
         var blockPropertiesTemplate = new StringBuilder()
             .AppendLine("group.candles=red_candle green_candle blue_candle")
-            .AppendLine("#BLOCK_CANDLES_1")
+            .AppendLine("#=BLOCK_CANDLES_1")
             .AppendLine("block.11=[candles]:candles=1:lit=false")
-            .AppendLine("#BLOCK_CANDLES_2")
+            .AppendLine("#=BLOCK_CANDLES_2")
             .AppendLine("block.12=[candles]:candles=2:lit=false")
-            .AppendLine("#BLOCK_CANDLES_3")
+            .AppendLine("#=BLOCK_CANDLES_3")
             .AppendLine("block.13=[candles]:candles=3:lit=false");
 
         await using var defineWriter = new StringWriter();

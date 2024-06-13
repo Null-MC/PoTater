@@ -10,6 +10,6 @@ internal partial class BlockPropertiesParser : PropertiesParserBase
         LineMatchExp = BlockLineRegex();
     }
 
-    [GeneratedRegex(@"^block\.([\d\*]+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    [GeneratedRegex(@"^\s*block\.([\d\*]+)\s*=\s*", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
     private static partial Regex BlockLineRegex();
 }
