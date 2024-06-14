@@ -1,7 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
 
 namespace NullMC.Potater.Internal.Parsers;
 
@@ -16,7 +16,7 @@ internal abstract partial class PropertiesParserBase(ILogger<IPropertiesParser> 
 {
     private static readonly Regex expGroup = RegexGroup();
     private static readonly Regex expComment = RegexComment();
-    private static readonly char[] whitespaceChars = [' ', '\t'];
+    private static readonly char[] whitespaceChars = [' ', '\t', '\n', '\r', '\\'];
     private static readonly char[] nameSplitChars = [' ', '\t', ',', ';', '|'];
 
     private readonly Dictionary<string, string[]> groupList = new(StringComparer.InvariantCultureIgnoreCase);
