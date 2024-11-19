@@ -54,15 +54,37 @@ internal abstract class PropertiesProcessorBase(
         var name = i >= 0 ? value[..i] : value;
         var state = i >= 0 ? value[i..] : string.Empty;
 
-        if (name.StartsWith('[') && name.EndsWith(']')) {
-            name = name[1..^1];
-            if (Parser.Groups.TryGetValue(name, out var groupValues)) {
-                foreach (var groupValue in groupValues)
-                    yield return $"{groupValue}{state}";
+        var groupStart = name.IndexOf('[');
+        if (groupStart >= 0) {
+            var groupEnd = name.IndexOf(']', groupStart);
 
-                yield break;
+            if (groupEnd >= 0) {
+                var prefix = name[..groupStart];
+                var suffix = name[(groupEnd+1)..];
+                name = name[(groupStart+1)..groupEnd];
+
+                if (Parser.Groups.TryGetValue(name, out var groupValues)) {
+                    foreach (var groupValue in groupValues) {
+                        foreach (var subValue in OnFilterValue(groupValue))
+                            yield return $"{prefix}{subValue}{suffix}{state}";
+                    }
+
+                    yield break;
+                }
             }
         }
+
+        //if (name.StartsWith('[') && name.EndsWith(']')) {
+        //    name = name[1..^1];
+        //    if (Parser.Groups.TryGetValue(name, out var groupValues)) {
+        //        foreach (var groupValue in groupValues) {
+        //            foreach (var subValue in OnFilterValue($"{groupValue}{state}"))
+        //                yield return subValue;
+        //        }
+
+        //        yield break;
+        //    }
+        //}
 
         yield return value;
     }
